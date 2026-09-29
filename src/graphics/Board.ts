@@ -40,68 +40,18 @@ export class Board {
   }
 
   private createBoardTiles() {
-    const tileGeom = new THREE.BoxGeometry(SQUARE_SIZE * 0.96, 0.4, SQUARE_SIZE * 0.96);
-
-    // Marble Holy materials (White side)
-    const holyLightMat = new THREE.MeshStandardMaterial({
-      color: 0xf3ede2,
-      roughness: 0.3,
-      metalness: 0.1
-    });
-    const holyDarkMat = new THREE.MeshStandardMaterial({
-      color: 0xd6cbb8,
-      roughness: 0.4,
-      metalness: 0.2
-    });
-
-    // Battlefield middle materials (Rows 3 - 6)
-    const battleLightMat = new THREE.MeshStandardMaterial({
-      color: 0x8a8479,
-      roughness: 0.8,
-      metalness: 0.1
-    });
-    const battleDarkMat = new THREE.MeshStandardMaterial({
-      color: 0x5a554d,
-      roughness: 0.85,
-      metalness: 0.15
-    });
-
-    // Dark Volcano / Abyss materials (Black side - Rows 7, 8)
-    const abyssLightMat = new THREE.MeshStandardMaterial({
-      color: 0x3d354a,
-      roughness: 0.5,
-      metalness: 0.3,
-      emissive: 0x1f0b24,
-      emissiveIntensity: 0.4
-    });
-    const abyssDarkMat = new THREE.MeshStandardMaterial({
-      color: 0x18141f,
-      roughness: 0.6,
-      metalness: 0.4,
-      emissive: 0x240608,
-      emissiveIntensity: 0.6
+    const tileGeom = new THREE.BoxGeometry(SQUARE_SIZE, 0.1, SQUARE_SIZE);
+    const invisibleMat = new THREE.MeshBasicMaterial({
+      transparent: true,
+      opacity: 0,
+      depthWrite: false
     });
 
     for (let row = 0; row < 8; row++) {
       for (let col = 0; col < 8; col++) {
-        const isWhiteSquare = (row + col) % 2 === 1;
-        let mat: THREE.MeshStandardMaterial;
-
-        if (row < 2) {
-          // White side
-          mat = isWhiteSquare ? holyLightMat : holyDarkMat;
-        } else if (row >= 6) {
-          // Black side
-          mat = isWhiteSquare ? abyssLightMat : abyssDarkMat;
-        } else {
-          // Middle Battlefield
-          mat = isWhiteSquare ? battleLightMat : battleDarkMat;
-        }
-
-        const mesh = new THREE.Mesh(tileGeom, mat.clone());
+        const mesh = new THREE.Mesh(tileGeom, invisibleMat);
         const { x, z } = Board.squareToCoords(String.fromCharCode(97 + col) + (row + 1));
-        mesh.position.set(x, -0.2, z);
-        mesh.receiveShadow = true;
+        mesh.position.set(x, 0.05, z);
 
         const square = String.fromCharCode(97 + col) + (row + 1);
         mesh.name = `tile_${square}`;
@@ -113,33 +63,7 @@ export class Board {
   }
 
   private createBoardFrame() {
-    // Grand outer border frame
-    const frameGeom = new THREE.BoxGeometry(SQUARE_SIZE * 8 + 1.2, 0.5, SQUARE_SIZE * 8 + 1.2);
-    const frameMat = new THREE.MeshStandardMaterial({
-      color: 0x222228,
-      roughness: 0.7,
-      metalness: 0.3
-    });
-    const frame = new THREE.Mesh(frameGeom, frameMat);
-    frame.position.set(0, -0.35, 0);
-    frame.receiveShadow = true;
-    this.group.add(frame);
-
-    // Gold / Rune inlay strips
-    const stripGeom = new THREE.BoxGeometry(SQUARE_SIZE * 8 + 0.4, 0.05, 0.1);
-    const goldMat = new THREE.MeshStandardMaterial({
-      color: 0xdfb15b,
-      metalness: 0.8,
-      roughness: 0.2
-    });
-
-    const strip1 = new THREE.Mesh(stripGeom, goldMat);
-    strip1.position.set(0, 0.01, SQUARE_SIZE * 4 + 0.1);
-    this.group.add(strip1);
-
-    const strip2 = new THREE.Mesh(stripGeom, goldMat);
-    strip2.position.set(0, 0.01, -SQUARE_SIZE * 4 - 0.1);
-    this.group.add(strip2);
+    // The 3D Floating Chess Arena model already includes ancient stone borders and 4 corner pillars.
   }
 
   private setupLighting(scene: THREE.Scene) {
@@ -213,12 +137,12 @@ export class Board {
       });
     };
 
-    // 1. Floating Chess Arena (Ancient Floating Foundation under board)
+    // 1. Floating Chess Arena (Đấu trường bàn cờ 3D lơ lửng cổ đại với 4 cột trụ đá và mặt sàn đá/dung nham)
     loader.load('./assets/models/meshy/env/board/floating_chess_arena.glb', (gltf) => {
       const arena = gltf.scene;
       setupMeshes(arena);
-      arena.scale.set(10.5, 6.0, 10.5);
-      arena.position.set(0, -4.5, 0);
+      arena.scale.set(8.55, 6.0, 10.05);
+      arena.position.set(0, -1.386, 0);
       this.group.add(arena);
     });
 
