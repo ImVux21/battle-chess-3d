@@ -40,7 +40,7 @@ class GameApp {
     // Scene setup
     this.scene = new THREE.Scene();
     this.scene.background = new THREE.Color(0x0e111a);
-    this.scene.fog = new THREE.Fog(0x0e111a, 28, 80);
+    this.scene.fog = new THREE.Fog(0x0e111a, 45, 120);
 
     // Camera setup
     const aspect = window.innerWidth / window.innerHeight;

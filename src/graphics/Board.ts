@@ -143,34 +143,45 @@ export class Board {
   }
 
   private setupLighting(scene: THREE.Scene) {
-    // Ambient light
-    const ambientLight = new THREE.AmbientLight(0xfff5ea, 1.2);
+    // Soft Sky & Ground Ambient Fill
+    const ambientLight = new THREE.AmbientLight(0xfff5ea, 1.0);
     scene.add(ambientLight);
 
-    // Main Sun Directional Light
-    const sunLight = new THREE.DirectionalLight(0xffffff, 2.0);
-    sunLight.position.set(12, 22, 14);
+    const hemiLight = new THREE.HemisphereLight(0x88bbff, 0x332211, 1.2);
+    scene.add(hemiLight);
+
+    // Main Sun Directional Light (Wider shadow frustum to cover citadel & bone gate)
+    const sunLight = new THREE.DirectionalLight(0xffffff, 2.2);
+    sunLight.position.set(16, 26, 18);
     sunLight.castShadow = true;
     sunLight.shadow.mapSize.width = 2048;
     sunLight.shadow.mapSize.height = 2048;
     sunLight.shadow.camera.near = 0.5;
-    sunLight.shadow.camera.far = 60;
-    sunLight.shadow.camera.left = -16;
-    sunLight.shadow.camera.right = 16;
-    sunLight.shadow.camera.top = 16;
-    sunLight.shadow.camera.bottom = -16;
-    sunLight.shadow.bias = -0.0005;
+    sunLight.shadow.camera.far = 70;
+    sunLight.shadow.camera.left = -24;
+    sunLight.shadow.camera.right = 24;
+    sunLight.shadow.camera.top = 24;
+    sunLight.shadow.camera.bottom = -24;
+    sunLight.shadow.bias = -0.0004;
     scene.add(sunLight);
 
-    // Warm torch light on the Dark Abyss side
-    const darkTorchLight = new THREE.PointLight(0xff4411, 4.0, 18);
-    darkTorchLight.position.set(0, 4, -12);
+    // Warm torch & demonic glow on the Dark Abyss side
+    const darkTorchLight = new THREE.PointLight(0xff4411, 5.0, 22);
+    darkTorchLight.position.set(0, 5, -13);
     scene.add(darkTorchLight);
 
-    // Holy radiance on the Light side
-    const holyLight = new THREE.PointLight(0xffea9f, 2.5, 18);
-    holyLight.position.set(0, 4, 12);
+    const boneGateAccent = new THREE.PointLight(0xa832d4, 4.0, 20);
+    boneGateAccent.position.set(0, 8, -17);
+    scene.add(boneGateAccent);
+
+    // Holy radiance & golden glow on the Light Citadel side
+    const holyLight = new THREE.PointLight(0xffea9f, 3.5, 22);
+    holyLight.position.set(0, 5, 13);
     scene.add(holyLight);
+
+    const citadelAccent = new THREE.PointLight(0x60a5fa, 3.0, 20);
+    citadelAccent.position.set(0, 8, 17);
+    scene.add(citadelAccent);
   }
 
   private loadEnvironmentProps() {
