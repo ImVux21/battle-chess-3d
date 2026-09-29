@@ -40,7 +40,7 @@ class GameApp {
     // Scene setup
     this.scene = new THREE.Scene();
     this.scene.background = new THREE.Color(0x0e111a);
-    this.scene.fog = new THREE.FogExp2(0x0e111a, 0.025);
+    this.scene.fog = new THREE.Fog(0x0e111a, 28, 80);
 
     // Camera setup
     const aspect = window.innerWidth / window.innerHeight;
@@ -52,6 +52,8 @@ class GameApp {
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    this.renderer.toneMappingExposure = 1.15;
 
     const container = document.getElementById('canvas-container')!;
     container.appendChild(this.renderer.domElement);

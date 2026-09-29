@@ -179,8 +179,25 @@ export class Board {
     const setupMeshes = (scene: THREE.Group) => {
       scene.traverse((child) => {
         if ((child as THREE.Mesh).isMesh) {
-          child.castShadow = true;
-          child.receiveShadow = true;
+          const mesh = child as THREE.Mesh;
+          mesh.castShadow = true;
+          mesh.receiveShadow = true;
+
+          const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+          materials.forEach((mat) => {
+            if (mat) {
+              const m = mat as THREE.MeshStandardMaterial;
+              if (m.map) {
+                m.map.anisotropy = 16;
+                m.map.minFilter = THREE.LinearMipmapLinearFilter;
+                m.map.magFilter = THREE.LinearFilter;
+                m.map.generateMipmaps = true;
+                m.map.needsUpdate = true;
+              }
+              if (m.normalMap) m.normalMap.anisotropy = 16;
+              if (m.roughnessMap) m.roughnessMap.anisotropy = 16;
+            }
+          });
         }
       });
     };
